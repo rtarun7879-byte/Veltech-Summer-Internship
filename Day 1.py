@@ -1,4 +1,0 @@
-weight=float(input("Enter the weight: "))
-height=float(input("Enterthe Height:"))
-BMI=weight/(height**2)
-print(f"BMI:{BMI:.1f}")
