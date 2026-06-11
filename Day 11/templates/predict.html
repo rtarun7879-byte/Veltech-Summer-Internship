@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav>
+    <a href="/">Home</a>
+    <a href="/predict">Prediction</a>
+    <a href="/records">Records</a>
+    <a href="/about">About</a>
+</nav>
+
+<h1>Crop Prediction Form</h1>
+
+<form>
+    <input type="number" placeholder="Nitrogen">
+    <input type="number" placeholder="Phosphorus">
+    <input type="number" placeholder="Potassium">
+    <input type="number" placeholder="Temperature">
+    <input type="number" placeholder="Humidity">
+    <input type="number" placeholder="pH">
+    <input type="number" placeholder="Rainfall">
+
+    <button type="submit">Predict Crop</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Records</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav>
+    <a href="/">Home</a>
+    <a href="/predict">Prediction</a>
+    <a href="/records">Records</a>
+    <a href="/about">About</a>
+</nav>
+
+<h1>Crop Records</h1>
+
+<table>
+<tr>
+    <th>ID</th>
+    <th>Crop</th>
+    <th>Yield</th>
+</tr>
+
+{% for crop in crops %}
+<tr>
+    <td>{{ crop.id }}</td>
+    <td>{{ crop.crop }}</td>
+    <td>{{ crop.yield }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
