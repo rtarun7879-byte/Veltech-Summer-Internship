@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Records</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav>
+    <a href="/">Home</a>
+    <a href="/predict">Prediction</a>
+    <a href="/records">Records</a>
+    <a href="/about">About</a>
+</nav>
+
+<h1>Crop Records</h1>
+
+<table>
+
+<tr>
+    <th>ID</th>
+    <th>Nitrogen</th>
+    <th>Phosphorus</th>
+    <th>Potassium</th>
+    <th>Temperature</th>
+    <th>Humidity</th>
+    <th>pH</th>
+    <th>Rainfall</th>
+    <th>Recommended Crop</th>
+</tr>
+
+{% for crop in crops %}
+
+<tr>
+    <td>{{ crop[0] }}</td>
+    <td>{{ crop[1] }}</td>
+    <td>{{ crop[2] }}</td>
+    <td>{{ crop[3] }}</td>
+    <td>{{ crop[4] }}</td>
+    <td>{{ crop[5] }}</td>
+    <td>{{ crop[6] }}</td>
+    <td>{{ crop[7] }}</td>
+    <td>{{ crop[8] }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>
