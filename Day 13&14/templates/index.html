@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}CropSense — Home{% endblock %}
+{% block content %}
+
+<section class="hero">
+    <div class="hero-inner">
+        <span class="hero-badge">🤖 ML-Powered Recommendations</span>
+        <h1>Smart Crop<br>Recommendations</h1>
+        <p class="hero-sub">Enter your soil and climate data to get AI-driven crop suggestions with confidence scores — in seconds.</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('predict') }}" class="btn btn-primary">Get Recommendation →</a>
+            <a href="{{ url_for('records') }}" class="btn btn-outline">View Records</a>
+        </div>
+    </div>
+    <div class="hero-stat">
+        <div class="stat-ring">
+            <span class="stat-number">{{ total }}</span>
+            <span class="stat-label">Predictions Made</span>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="feature-card">
+        <span class="feat-icon">🧪</span>
+        <h3>Soil Analysis</h3>
+        <p>Input nitrogen, phosphorus, potassium, and pH values to tailor recommendations to your exact soil composition.</p>
+    </div>
+    <div class="feature-card">
+        <span class="feat-icon">🌡️</span>
+        <h3>Climate Matching</h3>
+        <p>Temperature, humidity, and rainfall data are factored into every prediction for region-accurate results.</p>
+    </div>
+    <div class="feature-card">
+        <span class="feat-icon">📊</span>
+        <h3>Confidence Scores</h3>
+        <p>Every prediction comes with a confidence percentage so you know exactly how certain the model is.</p>
+    </div>
+</section>
+
+{% if latest %}
+<section class="recent-section">
+    <h2>Recent Predictions</h2>
+    <div class="recent-grid">
+        {% for r in latest %}
+        <div class="recent-card">
+            <span class="recent-emoji">{{ emojis.get(r['crop_name'], '🌱') }}</span>
+            <div class="recent-info">
+                <strong>{{ r['crop_name'].title() }}</strong>
+                <span class="confidence-badge">{{ r['confidence'] }}% confidence</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

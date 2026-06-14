@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}CropSense — Predict{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1>Crop Prediction</h1>
+    <p>Fill in your soil and climate parameters to get a recommendation.</p>
+</div>
+
+{% if error %}
+<div class="alert alert-error">⚠️ {{ error }}</div>
+{% endif %}
+
+<div class="form-card">
+    <form method="POST" action="{{ url_for('predict') }}" id="predict-form" novalidate>
+
+        <div class="form-section-label">🧪 Soil Nutrients</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="nitrogen">Nitrogen (N) <span class="unit">kg/ha</span></label>
+                <input type="number" id="nitrogen" name="nitrogen" min="0" max="200" step="0.01"
+                       placeholder="e.g. 90" required>
+                <span class="hint">Range: 0 – 200</span>
+            </div>
+            <div class="form-group">
+                <label for="phosphorus">Phosphorus (P) <span class="unit">kg/ha</span></label>
+                <input type="number" id="phosphorus" name="phosphorus" min="0" max="200" step="0.01"
+                       placeholder="e.g. 42" required>
+                <span class="hint">Range: 0 – 200</span>
+            </div>
+            <div class="form-group">
+                <label for="potassium">Potassium (K) <span class="unit">kg/ha</span></label>
+                <input type="number" id="potassium" name="potassium" min="0" max="200" step="0.01"
+                       placeholder="e.g. 43" required>
+                <span class="hint">Range: 0 – 200</span>
+            </div>
+        </div>
+
+        <div class="form-section-label">🌡️ Climate Conditions</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="temperature">Temperature <span class="unit">°C</span></label>
+                <input type="number" id="temperature" name="temperature" min="-10" max="60" step="0.01"
+                       placeholder="e.g. 21.5" required>
+                <span class="hint">Range: -10 – 60°C</span>
+            </div>
+            <div class="form-group">
+                <label for="humidity">Humidity <span class="unit">%</span></label>
+                <input type="number" id="humidity" name="humidity" min="0" max="100" step="0.01"
+                       placeholder="e.g. 82" required>
+                <span class="hint">Range: 0 – 100%</span>
+            </div>
+            <div class="form-group">
+                <label for="rainfall">Rainfall <span class="unit">mm</span></label>
+                <input type="number" id="rainfall" name="rainfall" min="0" max="3000" step="0.01"
+                       placeholder="e.g. 202" required>
+                <span class="hint">Range: 0 – 3000 mm</span>
+            </div>
+        </div>
+
+        <div class="form-section-label">⚗️ Soil Chemistry</div>
+        <div class="form-row form-row-single">
+            <div class="form-group">
+                <label for="ph">Soil pH <span class="unit">0–14</span></label>
+                <input type="number" id="ph" name="ph" min="0" max="14" step="0.01"
+                       placeholder="e.g. 6.5" required>
+                <span class="hint">Neutral is 7.0</span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-full">🔍 Predict Best Crop</button>
+            <button type="reset" class="btn btn-ghost btn-full">↺ Reset Form</button>
+        </div>
+    </form>
+</div>
+
+<script>
+// Client-side validation feedback
+document.getElementById('predict-form').addEventListener('submit', function(e) {
+    const inputs = this.querySelectorAll('input[required]');
+    let valid = true;
+    inputs.forEach(inp => {
+        inp.classList.remove('invalid');
+        if (!inp.value || isNaN(parseFloat(inp.value))) {
+            inp.classList.add('invalid');
+            valid = false;
+        }
+    });
+    if (!valid) {
+        e.preventDefault();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+});
+</script>
+{% endblock %}
