@@ -64,9 +64,42 @@
     </div>
 
     <div class="result-actions">
-        <a href="{{ url_for('predict') }}" class="btn btn-primary">🔍 New Prediction</a>
-        <a href="{{ url_for('records') }}" class="btn btn-outline">📋 View All Records</a>
-    </div>
+    <a href="{{ url_for('predict') }}" class="btn btn-primary">
+        New Prediction
+    </a>
+
+    <a href="{{ url_for('records') }}" class="btn btn-outline">
+        View Records
+    </a>
+
+    <button onclick="toggleDownloadMenu()" class="btn btn-primary">
+        Download Report
+    </button>
+</div>
+
+<div id="downloadMenu" class="download-menu" style="display:none;">
+
+    <a href="{{ url_for('download_pdf', id=record.id) }}" class=" btn pdf-btn">
+    Download PDF
+    </a>
+
+<a href="{{ url_for('download_png', id=record.id) }}" class="btn png-btn">
+    Download PNG
+</a>
+
+<a href="{{ url_for('download_csv', id=record.id) }}" class="btn csv-btn">
+    Download CSV
+</a>
+   
+</div>
+
+<script>
+function toggleDownloadMenu() {
+    let menu = document.getElementById("downloadMenu");
+    menu.style.display =
+        menu.style.display === "none" ? "block" : "none";
+}
+</script>
 
 </div>
 

@@ -1,10 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, send_file
+
 import hashlib
 import sqlite3
 import joblib
 import numpy as np
 import pandas as pd
 import os
+import csv
+
+from reportlab.pdfgen import canvas
 
 app = Flask(__name__)
 app.secret_key = 'cropsense2026'
@@ -13,7 +17,19 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 86400
 model = joblib.load("model.pkl")
 label_encoder = joblib.load("label_encoder.pkl")
 
-DB_PATH = "crop.db"
+# Load trained model
+model = joblib.load("model.pkl")
+label_encoder = joblib.load("label_encoder.pkl")
+
+# ================= DATABASE PATH =================
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+DB_PATH = os.path.join(BASE_DIR, "crop.db")
+
+print("Database Path:", DB_PATH)
+
+# =================================================
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -68,6 +84,7 @@ def signup():
         confirm  = request.form['confirm']
         if password != confirm:
             return render_template('signup.html', error="Passwords do not match.")
+        
         hashed = hashlib.sha256(password.encode()).hexdigest()
         try:
             conn = get_db()
@@ -153,6 +170,7 @@ def predict():
 
     return render_template('predict.html')
 
+
 @app.route('/result/<int:id>')
 def result(id):
     if 'user' not in session:
@@ -164,6 +182,128 @@ def result(id):
         return redirect(url_for('predict'))
     emoji = CROP_EMOJIS.get(record['crop_name'], '🌱')
     return render_template('result.html', record=record, emoji=emoji)
+
+
+# ================= PDF DOWNLOAD =================
+
+@app.route('/download/pdf/<int:id>')
+def download_pdf(id):
+
+    conn = get_db()
+    record = conn.execute(
+        "SELECT * FROM predictions WHERE id=?",
+        (id,)
+    ).fetchone()
+    conn.close()
+
+
+    if not record:
+        return redirect(url_for('records'))
+
+    pdf_file = os.path.join(
+    app.root_path,
+    f"prediction_{id}.pdf"
+)
+
+    c = canvas.Canvas(pdf_file)
+
+    c.drawString(100, 800, "CropSense Prediction Report")
+    c.drawString(100, 770, f"Crop: {record['crop_name']}")
+    c.drawString(100, 740, f"Confidence: {record['confidence']}%")
+    c.drawString(100, 710, f"Nitrogen: {record['nitrogen']}")
+    c.drawString(100, 680, f"Phosphorus: {record['phosphorus']}")
+    c.drawString(100, 650, f"Potassium: {record['potassium']}")
+    c.drawString(100, 620, f"Temperature: {record['temperature']}")
+    c.drawString(100, 590, f"Humidity: {record['humidity']}")
+    c.drawString(100, 560, f"pH: {record['ph']}")
+    c.drawString(100, 530, f"Rainfall: {record['rainfall']}")
+
+    c.save()
+    print("PDF File:", pdf_file)
+    print("Exists:", os.path.exists(pdf_file))
+
+    return send_file(pdf_file, as_attachment=True)
+
+@app.route('/download/csv/<int:id>')
+def download_csv(id):
+
+    conn = get_db()
+
+    record = conn.execute(
+        "SELECT * FROM predictions WHERE id=?",
+        (id,)
+    ).fetchone()
+
+    conn.close()
+
+    if not record:
+        return redirect(url_for('records'))
+
+    csv_file = os.path.join(
+    app.root_path,
+    f"prediction_{id}.csv"
+)
+
+    with open(csv_file, "w", newline="") as file:
+
+        writer = csv.writer(file)
+
+        writer.writerow([
+            "Crop",
+            "Confidence",
+            "Nitrogen",
+            "Phosphorus",
+            "Potassium",
+            "Temperature",
+            "Humidity",
+            "pH",
+            "Rainfall"
+        ])
+
+        writer.writerow([
+            record['crop_name'],
+            record['confidence'],
+            record['nitrogen'],
+            record['phosphorus'],
+            record['potassium'],
+            record['temperature'],
+            record['humidity'],
+            record['ph'],
+            record['rainfall']
+        ])
+    # Check whether the CSV file was created
+    print("CSV File:", csv_file)
+    print("Exists:", os.path.exists(csv_file))
+
+    return send_file(csv_file, as_attachment=True)
+
+    
+
+@app.route('/download/png/<int:id>')
+def download_png(id):
+
+    conn = get_db()
+
+    record = conn.execute(
+        "SELECT * FROM predictions WHERE id=?",
+        (id,)
+    ).fetchone()
+
+    conn.close()
+
+    if not record:
+        return redirect(url_for('records'))
+
+    image_path = os.path.join(
+        "static",
+        "images",
+        f"{record['crop_name']}.jpg"
+    )
+
+    return send_file(
+        image_path,
+        as_attachment=True
+    )
 
 @app.route('/records')
 def records():
@@ -200,6 +340,66 @@ def about():
     if 'user' not in session:
         return redirect(url_for('login'))
     return render_template('about.html')
+@app.route('/download_all_csv')
+def download_all_csv():
+
+    conn = get_db()
+
+    records = conn.execute(
+        "SELECT * FROM predictions"
+    ).fetchall()
+
+    conn.close()
+
+    csv_file = os.path.join(
+    app.root_path,
+    "all_predictions.csv"
+)
+
+    with open(csv_file, "w", newline="") as file:
+
+        writer = csv.writer(file)
+
+        writer.writerow([
+            "ID",
+            "Crop",
+            "Confidence",
+            "Nitrogen",
+            "Phosphorus",
+            "Potassium",
+            "Temperature",
+            "Humidity",
+            "pH",
+            "Rainfall",
+            "Date"
+        ])
+
+        for row in records:
+
+            writer.writerow([
+                row['id'],
+                row['crop_name'],
+                row['confidence'],
+                row['nitrogen'],
+                row['phosphorus'],
+                row['potassium'],
+                row['temperature'],
+                row['humidity'],
+                row['ph'],
+                row['rainfall'],
+                row['created_at']
+            ])
+
+    return send_file(
+        csv_file,
+        as_attachment=True
+    )
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+
+    app.run(
+        host='0.0.0.0',
+        port=port,
+        debug=False
+    )

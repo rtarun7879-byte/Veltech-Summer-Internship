@@ -2,19 +2,63 @@
 {% block title %}CropSense — Records{% endblock %}
 {% block content %}
 
-<div class="page-header">
-    <h1>Prediction Records</h1>
-    <p>{{ crops|length }} total prediction{% if crops|length != 1 %}s{% endif %} stored</p>
+<div class="records-hero">
+
+    <h1>📋 Prediction Records</h1>
+
+    <p>
+        {{ crops|length }} total prediction{% if crops|length != 1 %}s{% endif %}
+        stored in database
+    </p>
+
+    {% if crops %}
+    <div class="records-hero-actions">
+
+        <a href="{{ url_for('predict') }}"
+           class="btn btn-primary">
+            + New Prediction
+        </a>
+
+        <form method="POST"
+              action="{{ url_for('clear_records') }}"
+              onsubmit="return confirm('Clear all records?')">
+
+            <button type="submit"
+                    class="btn btn-danger">
+                Clear All
+            </button>
+
+        </form>
+
+    </div>
+    {% endif %}
+
 </div>
 
 {% if crops %}
-<div class="records-toolbar">
-    <a href="{{ url_for('predict') }}" class="btn btn-primary btn-sm">+ New Prediction</a>
-    <form method="POST" action="{{ url_for('clear_records') }}" style="display:inline"
-          onsubmit="return confirm('Clear all records? This cannot be undone.')">
-        <button type="submit" class="btn btn-danger btn-sm">🗑 Clear All</button>
-    </form>
+
+<div class="download-card">
+
+    <h2>⬇ DOWNLOAD RECORDS</h2>
+
+    <div class="download-section">
+
+        <h3>ALL RECORDS</h3>
+
+       <a href="{{ url_for('download_all_csv') }}"
+   class="btn csv-btn">
+
+    Download All as CSV
+
+</a>
+
+    </div>
+
 </div>
+
+
+
+
 
 <div class="table-wrap">
     <table>

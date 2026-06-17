@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 import joblib
 
-df = pd.read_csv(r"D:\veltech summerintenship\Veltech-Summer-Internship\Day 13&14\crop production.csv")
+df = pd.read_csv(r"D:\veltech summerintenship\Veltech-Summer-Internship\CropSense\crop production.csv")
 
 X = df[['N','P','K','temperature','humidity','ph','rainfall']]
 y = df['label']
