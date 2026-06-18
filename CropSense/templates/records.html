@@ -83,7 +83,7 @@
         <tr>
             <td>{{ c['id'] }}</td>
             <td class="crop-cell">
-                <img src="{{ url_for('static', filename='images/' + c['crop_name'] + '.jpg') }}"
+                <img src="{{ url_for('static', filename='images/' + c['crop_name'].title() + '.jpg') }}"
                      alt="{{ c['crop_name'] }}"
                      class="crop-thumb"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
