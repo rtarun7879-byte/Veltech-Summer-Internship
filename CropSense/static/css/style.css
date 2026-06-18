@@ -461,17 +461,47 @@ body {
 
 /* === CONFIDENCE BAR === */
 .confidence-section{
-    background:#ffffff;
+    background:linear-gradient(
+        135deg,
+        #f5f7f5,
+        #e8f5e9
+    );
     border-radius:20px;
+    padding:35px;
     overflow:hidden;
     box-shadow:0 8px 20px rgba(0,0,0,0.08);
     border:1px solid #d8ead8;
     margin-bottom:20px;
 }
-.conf-bar-wrap { background: rgba(255,255,255,0.2); }
-.conf-bar { background: linear-gradient(90deg, #76c442, #aed581); }
-.conf-label { color: #a5d6a7; }
-.conf-value { color: #c5e1a5; }
+.conf-bar-wrap{
+    width:100%;
+    height:22px;
+    background:#dbeafe;   /* sky blue */
+    border-radius:30px;
+    overflow:hidden;
+    margin-top:20px;
+}
+.conf-bar{
+    height:100%;
+    background:linear-gradient(
+        90deg,
+        #4caf50,
+        #66bb6a
+    );
+    border-radius:30px;
+}
+.conf-label{
+    color:#90a4ae;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:1px;
+}
+.conf-value{
+    color:#4caf50;
+    font-size:56px;
+    font-weight:800;
+    margin-top:20px;
+}
 /* === SUMMARY GRID === */
 .summary-grid{
     background:#ffffff;
