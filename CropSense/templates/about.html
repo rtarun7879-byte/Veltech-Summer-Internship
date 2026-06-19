@@ -38,8 +38,59 @@
             <span class="crop-tag">{{ c }}</span>
             {% endfor %}
         </div>
+        </div>
+
+<section class="feedback-section">
+
+    <h2>💬 Feedback</h2>
+
+    <p>We value your feedback. Please share your suggestions and experience.</p>
+
+    <form id="feedbackForm">
+
+        <textarea
+            id="feedbackText"
+            maxlength="200"
+            placeholder="Enter your feedback (Maximum 200 characters)"
+            required>
+        </textarea>
+
+        <div class="char-count">
+            <span id="count">0</span>/200 Characters
+        </div>
+
+        <button type="submit" class="feedback-btn">
+            Submit Feedback
+        </button>
+
+    </form>
+
+    <div id="thankYouMessage" style="display:none;">
+        ✅ Thank you for your feedback!
     </div>
 
-    
+</section>
+
+<script>
+
+const feedbackText = document.getElementById("feedbackText");
+const count = document.getElementById("count");
+
+feedbackText.addEventListener("input", function() {
+    count.textContent = this.value.length;
+});
+
+document.getElementById("feedbackForm")
+.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    document.getElementById("thankYouMessage").style.display = "block";
+
+    feedbackText.value = "";
+    count.textContent = "0";
+});
+
+</script>
 
 {% endblock %}
